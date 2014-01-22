@@ -5,6 +5,7 @@ class MoviesController < ApplicationController
           {"title"=>"The Matrix Reloaded", "year"=>"2003", "imdbID"=>"tt0234215", "Type"=>"movie"},
           {"title"=>"The Matrix Revolutions", "year"=>"2003", "imdbID"=>"tt0242653", "Type"=>"movie"}]
 
+  # route: GET    /movies(.:format)
   def index
     @movies = @@movie_db
 
@@ -14,7 +15,7 @@ class MoviesController < ApplicationController
       format.xml { render :xml => @@movie_db.to_xml }
     end
   end
-
+  # route: # GET    /movies/:id(.:format)
   def show
     @movie = @@movie_db.find do |m|
       m["imdbID"] == params[:id]
@@ -25,9 +26,11 @@ class MoviesController < ApplicationController
     end
   end
 
+  # route: GET    /movies/new(.:format)
   def new
   end
 
+  # route: GET    /movies/:id/edit(.:format)
   def edit
     @movie = @@movie_db.find do |m|
       m["imdbID"] == params[:id]
@@ -39,6 +42,7 @@ class MoviesController < ApplicationController
     end
   end
 
+  #route: # POST   /movies(.:format)
   def create
     # create new movie object from params
     movie = params.require(:movie).permit(:title, :year)
@@ -50,6 +54,7 @@ class MoviesController < ApplicationController
     redirect_to action: :index
   end
 
+  # route: PATCH  /movies/:id(.:format)
   def update
     # 'delete and insert'
     @@movie_db.delete_if do |m|
@@ -64,6 +69,7 @@ class MoviesController < ApplicationController
     redirect_to action: :index
   end
 
+  # route: DELETE /movies/:id(.:format)
   def destroy
     @@movie_db.delete_if do |m|
       m["imdbID"] == params[:id]
