@@ -1,4 +1,4 @@
-<%= form_for :movie, method: :patch, url: movie_path+(@movie['imdbID']) do |f| %>
+<%= form_for :movie, method: :patch, url: movie_path do |f| %>
   <%= label_tag(:title, "Title:") %> <%= f.text_field :title, value: @movie['title'] %></br>
   <%= label_tag(:year, "Year:") %> <%= f.text_field :year, value: @movie['year'] %></br>
   <%= f.submit "Save Changes" %>
