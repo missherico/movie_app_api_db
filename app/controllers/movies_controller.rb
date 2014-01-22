@@ -7,6 +7,12 @@ class MoviesController < ApplicationController
 
   def index
     @movies = @@movie_db
+
+    respond_to do |format|
+      format.html
+      format.json { render :json => @@movie_db }
+      format.xml { render :xml => @@movie_db.to_xml }
+    end
   end
 
   def show
@@ -29,8 +35,9 @@ class MoviesController < ApplicationController
 
     if @movie.nil?
       flash.now[:message] = "Movie not found" if @movie.nil?
-    @movie = {}
-  end  end
+      @movie = {}
+    end
+  end
 
   def create
     # create new movie object from params
