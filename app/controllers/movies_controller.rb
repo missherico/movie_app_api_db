@@ -56,25 +56,12 @@ class MoviesController < ApplicationController
 
   # route: PATCH  /movies/:id(.:format)
   def update
-    # 'delete and insert'
-    @@movie_db.delete_if do |m|
-      m["imdbID"] == params[:id]
-    end
-
-    #create new movie
-    movie = params.require(:movie).permit(:title, :year)
-    movie['imdbID'] = params[:id]
-
-    @@movie_db << movie
-    redirect_to action: :index
+    #implement
   end
 
   # route: DELETE /movies/:id(.:format)
   def destroy
-    @@movie_db.delete_if do |m|
-      m["imdbID"] == params[:id]
-    end
-    redirect_to action: :index
+    #implement
   end
 
 end
