@@ -41,9 +41,13 @@ class MoviesController < ApplicationController
   # route: PATCH  /movies/:id(.:format)
   def update
     @movie = get_movie params[:id]
+
+    updated_info = params.require(:movie).permit(:title, :year)
+    @movie.update_attributes(updated_info)
     #implement
     redirect_to action: :show
   end
+
 
   # route: DELETE /movies/:id(.:format)
   def destroy
@@ -55,11 +59,25 @@ class MoviesController < ApplicationController
 
 
   def search
+    
 
-
-
+    render :search
   end
 
+
+  def result
+  
+  search_str = params[:movie]
+
+  response = Typhoeus.get("http://www.omdbapi.com/", :params => {:s => search_str, :plot => "full"})
+  result = JSON.parse(response.body)
+
+  @result_array = result["Search"].sort_by { |movie| movie["Year"]}
+  save_search_to_db
+  
+
+  render :result
+  end
 
 
 private
@@ -77,5 +95,19 @@ private
   end
 
 
+  def save_search_to_db
+    #movie = params.require(:movie).permit(:title, :year, :imdbID, :full_plot, :pic_link)
+
+    local_array = @result_array.each do |movie|
+      id = movie["imdbID"]
+      response = Typhoeus.get("http://www.omdbapi.com/", :params => {:i => id, :plot => "full"})
+      result = JSON.parse(response.body)
+
+      movie = Movie.create(title: result["Title"], year: result["Year"], imdb: result["imdbID"], full_plot: result["Plot"], pic_link: result["Poster"])
+
+    end
+
+
+  end
 
 end
