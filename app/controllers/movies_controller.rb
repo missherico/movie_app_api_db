@@ -1,19 +1,26 @@
 class MoviesController < ApplicationController
 
 
+  def welcome
+
+  end
+
   # route: GET    /movies(.:format)
   def index
     @movies = Movie.all
 
     respond_to do |format|
       format.html
-      format.json { render :json => @movie }
-      format.xml { render :xml => @movie.to_xml }
+      format.json { render :json => @movies }
+      format.xml { render :xml => @movies.to_xml }
     end
+
   end
+
   # route: # GET    /movies/:id(.:format)
   def show
-    @movie = get_movie params[:id]
+    id = params[:id]
+    @movie = Movie.find(id)
   end
 
   # route: GET    /movies/new(.:format)
@@ -22,9 +29,8 @@ class MoviesController < ApplicationController
 
   # route: GET    /movies/:id/edit(.:format)
   def edit
-    @movie = get_movie params[:id]
-
-
+    id = params[:id]
+    @movie = Movie.find(id)
   end
 
   #route: # POST   /movies(.:format)
@@ -40,10 +46,10 @@ class MoviesController < ApplicationController
 
   # route: PATCH  /movies/:id(.:format)
   def update
-    @movie = get_movie params[:id]
-
+    id = params[:id]
+    movie = Movie.find(id)
     updated_info = params.require(:movie).permit(:title, :year)
-    @movie.update_attributes(updated_info)
+    movie.update_attributes(updated_info)
     #implement
     redirect_to action: :show
   end
@@ -81,32 +87,31 @@ class MoviesController < ApplicationController
 
 
 private
-  def get_movie movie_id
-      the_movie = Movie.find do |movie|
-      movie["id"] = movie_id
 
-      end
 
-      if the_movie.nil?
-        flash.now[:message] = "Movie not found" if @movie.nil?
-        the_movie = {}
-      end
-      the_movie
-  end
+  # def get_movie movie_id
+  #     the_movie = Movie.find do |movie|
+  #     movie[:id] = movie_id
+
+  #     end
+
+  #     if the_movie.nil?
+  #       flash.now[:message] = "Movie not found" if @movie.nil?
+  #       the_movie = {}
+  #     end
+  #     the_movie
+  # end
 
 
   def save_search_to_db
-    #movie = params.require(:movie).permit(:title, :year, :imdbID, :full_plot, :pic_link)
-
     local_array = @result_array.each do |movie|
       id = movie["imdbID"]
       response = Typhoeus.get("http://www.omdbapi.com/", :params => {:i => id, :plot => "full"})
       result = JSON.parse(response.body)
 
       movie = Movie.create(title: result["Title"], year: result["Year"], imdb: result["imdbID"], full_plot: result["Plot"], pic_link: result["Poster"])
-
     end
-
+    movie
 
   end
 

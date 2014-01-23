@@ -1,5 +1,8 @@
-<%= form_for :movie, method: :patch, url: movie_path(@movie[:id]) do |f| %>
-  <%= label_tag(:title, "Title:") %> <%= f.text_field :title, value: @movie['title'] %></br>
-  <%= label_tag(:year, "Year:") %> <%= f.text_field :year, value: @movie['year'] %></br>
+<%= form_for :movie, method: :patch, url: movie_path(@movie) do |f| %>
+  <%= label_tag(:title, "Title:") %> <%= f.text_field :title, value: @movie[:title] %></br>
+
+  binding.pry
+
+  <%= label_tag(:year, "Year:") %> <%= f.text_field :year, value: @movie[:year] %></br>
   <%= f.submit "Save Changes" %>
 <% end %>

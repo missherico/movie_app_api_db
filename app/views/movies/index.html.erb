@@ -2,7 +2,6 @@
 
 
 
-<%= debug @movies %>
 
 <% @movies.each do |movie| %>
 
@@ -11,7 +10,8 @@
   <%= link_to movie["title"], movie_path(movie[:id]) %> - <%= movie["year"] %></br>
 
   <%= button_to "delete", {controller: :movies, action: :destroy, id: movie[:id] }, :method => :delete %>
-  <%= button_to "edit", {controller: :movies, action: :edit, id: movie[:id] }, :method => :get %>
+  
+  <%= button_to "Edit", {controller: :movies, action: :edit, id: movie[:id] }, :method => :get %>
 
   <br>
 
