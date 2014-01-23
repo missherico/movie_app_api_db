@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   end
   # route: # GET    /movies/:id(.:format)
   def show
-    @movie = get_movie params[:imdbid]
+    @movie = get_movie params[:id]
   end
 
   # route: GET    /movies/new(.:format)
@@ -22,7 +22,8 @@ class MoviesController < ApplicationController
 
   # route: GET    /movies/:id/edit(.:format)
   def edit
-    @movie = get_movie params[:imdbid]
+    @movie = get_movie params[:id]
+
 
   end
 
@@ -41,18 +42,31 @@ class MoviesController < ApplicationController
   def update
     @movie = get_movie params[:id]
     #implement
+    redirect_to action: :show
   end
 
   # route: DELETE /movies/:id(.:format)
   def destroy
-    #implement
+    movie = get_movie params[:id]
+    movie.destroy
+    
+    redirect_to action: :index
   end
+
+
+  def search
+
+
+
+  end
+
 
 
 private
   def get_movie movie_id
-      the_movie = @@movie_db.find do |m|
-        m["imdbID"] == params[:id]
+      the_movie = Movie.find do |movie|
+      movie["id"] = movie_id
+
       end
 
       if the_movie.nil?
