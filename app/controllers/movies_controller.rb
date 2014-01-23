@@ -1,9 +1,5 @@
 class MoviesController < ApplicationController
 
-  @@movie_db = [
-          {"title"=>"The Matrix", "year"=>"1999", "imdbID"=>"tt0133093", "Type"=>"movie"},
-          {"title"=>"The Matrix Reloaded", "year"=>"2003", "imdbID"=>"tt0234215", "Type"=>"movie"},
-          {"title"=>"The Matrix Revolutions", "year"=>"2003", "imdbID"=>"tt0242653", "Type"=>"movie"}]
 
   # route: GET    /movies(.:format)
   def index
@@ -17,13 +13,7 @@ class MoviesController < ApplicationController
   end
   # route: # GET    /movies/:id(.:format)
   def show
-    @movie = @@movie_db.find do |m|
-      m["imdbID"] == params[:id]
-    end
-    if @movie.nil?
-      flash.now[:message] = "Movie not found" if @movie.nil?
-      @movie = {}
-    end
+    @movie = get_movie params[:id]
   end
 
   # route: GET    /movies/new(.:format)
@@ -32,14 +22,8 @@ class MoviesController < ApplicationController
 
   # route: GET    /movies/:id/edit(.:format)
   def edit
-    @movie = @@movie_db.find do |m|
-      m["imdbID"] == params[:id]
-    end
+    @movie = get_movie params[:id]
 
-    if @movie.nil?
-      flash.now[:message] = "Movie not found" if @movie.nil?
-      @movie = {}
-    end
   end
 
   #route: # POST   /movies(.:format)
@@ -56,6 +40,7 @@ class MoviesController < ApplicationController
 
   # route: PATCH  /movies/:id(.:format)
   def update
+    @movie = get_movie params[:id]
     #implement
   end
 
@@ -63,5 +48,21 @@ class MoviesController < ApplicationController
   def destroy
     #implement
   end
+
+
+private
+  def get_movie movie_id
+      the_movie = @@movie_db.find do |m|
+        m["imdbID"] == params[:id]
+      end
+
+      if the_movie.nil?
+        flash.now[:message] = "Movie not found" if @movie.nil?
+        the_movie = {}
+      end
+      the_movie
+  end
+
+
 
 end
